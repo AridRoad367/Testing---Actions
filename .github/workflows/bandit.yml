@@ -49,3 +49,6 @@ jobs:
           # skips: # optional, default is DEFAULT
           # path to a .bandit file that supplies command line arguments
           # ini_path: # optional, default is DEFAULT
+        env:
+          LOG_LEVEL: debug
+ 
