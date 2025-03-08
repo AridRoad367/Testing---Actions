@@ -1,41 +1,31 @@
 using System;
-using System.Net.Http;
-using System.Threading.Tasks;
+using System.IO;
 
 class Program
 {
-    // Hardcoded API key - a typical issue
-    private const string ApiKey = "12345-ABCDE-SECRET-KEY";
-
-    static async Task FetchData()
+    static void Main(string[] args)
     {
-        string url = $"https://example.com/data?api_key={ApiKey}";
+        // Issue #1: Hardcoded sensitive information
+        string password = "SuperSecret123";
 
-        using (HttpClient client = new HttpClient())
+        Console.WriteLine("Enter your name:");
+        string name = Console.ReadLine();
+
+        // Issue #2: Insecure string concatenation (potential for injection attacks)
+        string greeting = "Hello, " + name;
+        Console.WriteLine(greeting);
+
+        // Issue #3: Insecure file handling (no input validation)
+        Console.WriteLine("Enter the file name to read:");
+        string fileName = Console.ReadLine();
+        string filePath = "C:\\Test\\" + fileName; // Could allow directory traversal
+        if (File.Exists(filePath))
         {
-            HttpResponseMessage response = await client.GetAsync(url);
-
-            if (response.IsSuccessStatusCode)
-            {
-                string responseData = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(responseData);
-            }
-            else
-            {
-                throw new Exception("Failed to fetch data");
-            }
+            Console.WriteLine(File.ReadAllText(filePath));
         }
-    }
-
-    static async Task Main(string[] args)
-    {
-        try
+        else
         {
-            await FetchData();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
+            Console.WriteLine("File not found.");
         }
     }
 }
